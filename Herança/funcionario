@@ -1,0 +1,187 @@
+package poo_estudo;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+class Funcionario {
+
+    public double salario;
+    public double salarioAnual;
+    public String nome;
+
+    // metodo construtor
+    public Funcionario(String nome, double salario){
+        this.nome = nome;
+        this.salario = salario;
+    }
+
+    public Funcionario(String nome, double salario, double valorAumento){
+        this.nome = nome;
+        this.salario = salario;
+        this.setAumento(valorAumento);
+    }
+    
+    public void exibeDados(){
+        System.out.println("Nome do funcionario: " +this.nome);
+        System.out.println("Salario mensal: " +this.salario);
+        System.out.println("Salario Anual: " +this.ganhoAnual());
+
+    }
+
+    public void setAumento(double valorAumento){
+        this.salario += valorAumento;
+    }
+
+    public  double ganhoAnual(){
+        int anoMeses = 12;
+        this.salarioAnual = this.salario * anoMeses;
+
+        return this.salarioAnual;
+    }
+
+}
+
+class Assistente extends Funcionario {
+
+    int matricula;
+
+    public Assistente (String nome, double salario, double valorAumento){
+        super(nome, salario, valorAumento);
+    }
+    public Assistente (String nome, double salario){
+        super(nome, salario);
+    }
+    
+    @Override
+    public void exibeDados(){
+
+        System.out.println("Matricula: "+this.getMatricula());
+        System.out.println("Nome do funcionario: " +this.nome);
+        System.out.println("Salario mensal: " +this.salario);
+        System.out.println("Salario Anual: " +this.ganhoAnual());
+
+    }
+
+    public int geradorMatricula(){
+        int min = 100;
+        int max = 9999;
+        
+        this.matricula = ThreadLocalRandom.current().nextInt(min, max);
+        
+        return this.matricula;
+    }
+
+    public int getMatricula(){
+        return this.geradorMatricula();
+    }
+    
+    public void setMatricula(int matricula_Ass){
+        this.matricula = matricula_Ass;
+
+    }
+
+}
+
+class AssistenteTec extends Assistente {
+
+    public double bonus;
+    
+
+    public AssistenteTec (String nome, double salario, double bonus){
+        super(nome, salario);
+        this.bonus = bonus;
+    }
+    public AssistenteTec (String nome, double salario){
+        super(nome, salario);
+    }
+
+    public void bonus (double valorBonus){
+        this.bonus += valorBonus;
+    }
+
+    @Override
+    public  double ganhoAnual(){
+
+        int anoMeses = 12;
+
+        return (this.bonus + this.salario) * anoMeses;
+    }
+
+    @Override
+    public void exibeDados(){
+
+        System.out.println("Matricula: "+this.getMatricula());
+        System.out.println("Nome do funcionario: " +this.nome);
+        System.out.println("Salario mensal: " +this.salario);
+        System.out.println("Bonus: " +this.bonus);
+        System.out.println("Salario Anual: " +this.ganhoAnual());
+        
+    }
+
+}
+
+class AssistenteAdm extends Assistente{
+
+    double salarioNoturno;
+    String turno;
+
+    @Override
+    public void exibeDados(){
+
+        System.out.println("Matricula: "+this.getMatricula());
+        System.out.println("Turno: " +this.getTipoTurno());
+        System.out.println("Nome do funcionario: " +this.nome);
+        System.out.println("Salario mensal: " +this.salario);
+        System.out.println("Salario noturno: " +this.getAdcionalNoite());
+        System.out.println("Salario Anual: " +this.ganhoAnual());
+
+        
+    }
+
+    public AssistenteAdm(String nome, double salario, String turno, double valorAdicionalNoite){
+        super(nome, salario);
+        this.setTipoTurno(turno);
+        this.setAdicionalNoite(valorAdicionalNoite);
+    }
+    
+    public AssistenteAdm(String nome, double salario, String turno){
+        super(nome, salario);
+        this.setTipoTurno(turno);
+    }
+
+    public void setAdicionalNoite(double valorAdicional){
+        this.salarioNoturno = this.salario + valorAdicional;
+    }
+
+    public double getAdcionalNoite(){
+        return this.salarioNoturno;
+    }
+
+    public String getTipoTurno(){
+        return this.turno;
+    }
+
+    public void setTipoTurno(String turno){
+        this.turno = turno;
+        
+        if (turno.equalsIgnoreCase("noite")) {
+            this.salarioNoturno = this.salarioNoturno > 0 ? this.salarioNoturno : this.salario;
+        } else{
+            this.salarioNoturno = 0;
+        }
+    }
+
+    @Override
+    public  double ganhoAnual(){
+
+        int anoMeses = 12;
+        if (turno.equalsIgnoreCase("noite")) {
+            this.salario = this.salarioNoturno;
+            return  this.salarioNoturno * anoMeses;
+        } else{
+            return this.salario * anoMeses;
+        }
+
+    }
+
+
+}
